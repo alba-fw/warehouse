@@ -1,6 +1,9 @@
 {
-  "name": "warehouse",
+  "name": "@albajs/warehouse",
   "version": "0.0.1",
+  "description": "Official AlbaJS DI-container",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "devDependencies": {
     "@types/jest": "^28.1.4",
     "jest": "^28.1.2",

@@ -141,6 +141,35 @@ export class Warehouse {
         return this.singletons[contract];
     }
 
+    run(object: Object, method: any): any {
+
+        // no dependencies on the method, just execute it
+        if (method.length === 0) {
+            return method();
+        }
+
+        const dependenciesTypes:any[] = Reflect.getMetadata('design:paramtypes', object, method.name);
+
+        if (dependenciesTypes === undefined) {
+            throw `No metadata found for method \`${method.name}\`. Did you forgot to add the @Runnable() decorator to it or to enable "emitDecoratorMetadata"?`;
+        }
+
+        // resolve the dependencies...
+        let dependencies:any = [];
+
+        for (const dependencyType of dependenciesTypes) {
+
+            // resolve each dependency
+            if (typeof dependencyType === 'string') {
+                dependencies.push(this.getInterface(dependencyType));
+            } else {
+                dependencies.push(this.make(dependencyType));
+            }
+        }
+
+        return method(...dependencies);
+    }
+
     whenAny(): BindingContext {
         // we decided to pass a callback to the BindingContext here for some reasons:
         // 1. Passing the entire dictionary don't seems to be a good idea, since we'd be exposing the

@@ -1,4 +1,4 @@
-import {Warehouse} from "../src/Warehouse";
+import {Warehouse} from "../src";
 import {HelloService} from "./mocks/HelloService";
 import {I18n} from "./mocks/I18n";
 import {Languages} from "./mocks/Languages.enum";

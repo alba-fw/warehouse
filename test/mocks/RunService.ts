@@ -1,5 +1,5 @@
 import {HelloService} from "./HelloService";
-import {Runnable} from "../../src/decorators/Runable";
+import {Runnable} from "../../src";
 
 export class RunService {
 

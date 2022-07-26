@@ -1,12 +1,12 @@
 import {Warehouse} from "../src/Warehouse";
 import {CircularService1} from "./mocks/CircularService1";
 
-describe("Test eager resolving of dependencies", () => {
+describe("Test edge cases", () => {
 
     let warehouse:Warehouse = new Warehouse();
 
     it ('Test the correct handling of circular dependencies', () => {
-        warehouse.get(CircularService1);
+        expect(() => warehouse.get(CircularService1)).toThrow('Circular dependency found when resolving `CircularService3`');
     });
 
 });

@@ -41,7 +41,7 @@ export class Warehouse {
      */
     private make<Type>(type: ClassConstructor<Type>, parentType?: ClassConstructor<Type>):Type {
 
-        // first of all, check if we have a configured binding for the object
+        // first, check if we have a configured binding for the object
         const result:Type|undefined = parentType === undefined ? this.makeFromBinding(type.name) : this.makeFromBinding(type.name, parentType.name);
         if (result !== undefined) {
             return result;
@@ -53,7 +53,7 @@ export class Warehouse {
         }
 
         // there are dependencies, so find the dependencies types
-        const dependenciesTypes = Reflect.getMetadata('design:paramtypes', type);
+        const dependenciesTypes:any[] = Reflect.getMetadata('design:paramtypes', type);
         if (dependenciesTypes === undefined) {
 
             // the type is a native nodejs type
@@ -71,10 +71,15 @@ export class Warehouse {
         }
 
         // resolve the dependencies...
-        let dependencies:any[] = [];
+        let dependencies:any = [];
 
         // go through the dependencies trying to resolve each one of them
         for (const dependencyType of dependenciesTypes) {
+
+            // reflect api already detects circular dependencies, returning undefined when a circular dependency is found
+            if (dependencyType === undefined) {
+                throw `Circular dependency found when resolving \`${type.name}\``;
+            }
 
             // recursively resolve the dependencies
             if (typeof dependencyType === 'string') {
@@ -116,7 +121,7 @@ export class Warehouse {
      */
     get<Type>(type: ClassConstructor<Type>):Type {
         if (this.singletons[type.name] === undefined) {
-            this.singletons[type.name] = this.getNew(type);
+            this.singletons[type.name] = this.make(type);
         }
         return this.singletons[type.name];
     }

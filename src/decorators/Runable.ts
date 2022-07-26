@@ -1,3 +1,3 @@
 export function Runnable() {
-    return () => {};
+    return (target:any, propertyKey: string, descriptor: PropertyDescriptor) => {};
 }

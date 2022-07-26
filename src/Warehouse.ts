@@ -167,7 +167,7 @@ export class Warehouse {
 
         }
 
-        return method(...dependencies);
+        return method.call(object, ...dependencies);
     }
 
     whenAny(): BindingContext {

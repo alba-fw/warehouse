@@ -23,4 +23,8 @@ describe("Test Warehouse run method", () => {
         expect(() => warehouse.run(service, service.methodWithDepsNotDecorated)).toThrow('No metadata found for method `methodWithDepsNotDecorated`. Did you forgot to add the @Runnable() decorator to it or to enable "emitDecoratorMetadata"?');
     });
 
+    it("Runs a method with dependencies including a call to `this`", () => {
+        expect(warehouse.run(service, service.methodWithDepsUsingThis)).toBe('Hello Jeff | Hey Jeff');
+    });
+
 });

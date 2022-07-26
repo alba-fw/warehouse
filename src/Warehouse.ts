@@ -141,22 +141,21 @@ export class Warehouse {
         return this.singletons[contract];
     }
 
-    run(object: Object, method: any): any {
+    run<Type>(object: Object, method: (...params: any[]) => Type): Type {
 
         // no dependencies on the method, just execute it
         if (method.length === 0) {
             return method();
         }
 
+        // otherwise, we resolve the dependencies
         const dependenciesTypes:any[] = Reflect.getMetadata('design:paramtypes', object, method.name);
-
         if (dependenciesTypes === undefined) {
             throw `No metadata found for method \`${method.name}\`. Did you forgot to add the @Runnable() decorator to it or to enable "emitDecoratorMetadata"?`;
         }
 
         // resolve the dependencies...
         let dependencies:any = [];
-
         for (const dependencyType of dependenciesTypes) {
 
             // resolve each dependency
@@ -165,6 +164,7 @@ export class Warehouse {
             } else {
                 dependencies.push(this.make(dependencyType));
             }
+
         }
 
         return method(...dependencies);
